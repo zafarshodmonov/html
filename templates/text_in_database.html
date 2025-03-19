@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text in Databases</title>
+    <style>
+        body {
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            /* background-color: #121212;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; */
+        } 
+
+        p {
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        .code-container {
+            background-color: #1e1e1e;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            overflow-x: auto;
+        }
+        .code {
+            font-family: Consolas, monospace;
+            color: white;
+        }
+        .code-in-text {
+            color: white;
+            background-color: #1e1e1e;
+            padding: 5px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body style="background-color:#F8F8FF;">
+    <h1>Text in Databases</h1>
+    <p>Bu darsda PostgreSQL ma'lumotlar bazasida test ma'lumotlarini qanday yaratish mumkinligi haqida gaplashamiz. Shu bilan birga, biz SQL bo'yicha yanada chuqur bilimlarga ega bo'lamiz. Bu ko'nikmalar faqat matn bilan ishlash uchun emas, balki umumiy SQL ishlash qobiliyatimizni oshirish uchun ham muhim.</p>
+    <hr>
+    <h2>
+        Test Ma'lumotlarini Yaratish va Uning Ahamiyati
+    </h2>
+    <p>
+        Ko'pincha SQL so‘rovlarining samaradorligini tekshirish uchun ko‘p miqdorda ma'lumot kerak bo‘ladi.
+        Masalan, 10,000 yoki 100,000 yoki hatto 1,000,000 ta yozuv bo‘lsa, so‘rovlarning tezligi va indekslashning samaradorligini tekshirish osonlashadi. Shuningdek, turli tanlovlar ma'lumotlar bazasining qanchalik joy egallashiga ta'sir qilishini ham ko'rib chiqamiz.
+    </p>
+    <p>
+        Ma'lumotlarni Python yoki shell script yordamida yaratish mumkin, lekin PostgreSQL o‘zida tasodifiy ma'lumotlar yaratish uchun maxsus funksiyalar mavjud. Ushbu darsda biz quyidagi muhim funksiyalar bilan ishlaymiz:
+    </p>
+    <hr>
+    <h2>
+        1. <code class="code-in-text">random()</code> - Tasodifiy sonlar yaratish
+    </h2>
+    <p>
+        <code class="code-in-text">random()</code> funksiyasi 0 va 1 oralig‘ida tasodifiy son qaytaradi.
+    </p>
+    <p>
+        Masalan:
+    </p>
+    <div class="code-container">
+        <pre><code class="code">testdb=# SELECT random();</code></pre>
+    </div>
+    <p>Natija har safar har xil bo‘ladi.</p>
+    <p>Agar butun son kerak bo‘lsa, <code class="code-in-text">random()</code> ni kerakli diapazonga ko‘paytirib va <code class="code-in-text">trunc()</code> bilan butun songa aylantiramiz:</p>
+    <div class="code-container">
+        <pre><code class="code">testdb=# SELECT trunc(random() * 100);</code></pre>
+    </div>
+    <p>Yuqoridagi so‘rov 0 va 100 oralig‘ida tasodifiy butun son qaytaradi.</p>
+    <hr>
+    <h2>2. <code class="code-in-text">repeat()</code> - Matnlarni qaytarish</h2>
+    <p>Matnni bir necha marta takrorlash uchun <code class="code-in-text">repeat()</code> ishlatiladi.</p>
+    <p>Masalan:</p>
+    <div class="code-container">
+        <pre><code class="code">testdb=# SELECT repeat('Hello', 3);</code></pre>
+    </div>
+    <p>Natija:</p>
+    <div class="code-container">
+        <pre><code class="code">repeat
+--------
+HelloHelloHello (1 row)</code></pre>
+    </div>
+
+    <p>Bu funksiya uzun matn yaratish yoki tasodifiy kalitlar hosil qilish uchun ishlatiladi.</p>
+
+    <hr>
+    <h2>3. <code class="code-in-text">generate_series()</code> - Ko‘p qator ma'lumot yaratish</h2>
+    <p>Bu funksiya berilgan oraliqda ketma-ket sonlar yaratadi.</p>
+    <p>Masalan:</p>
+    <div class="code-container">
+        <pre><code class="code">SELECT generate_series(1, 5);</code></pre>
+    </div>
+    <p>Natija:</p>
+    <div class="code-container">
+        <pre><code class="code">generate_series
+-----------------
+               1
+               2
+               3
+               4
+               5
+(5 rows)</code></pre>
+    </div>
+    <p>Agar oraliqni o‘zgartirish kerak bo‘lsa, <code class="code-in-text">generate_series()</code> funksiyasiga uchta argument beriladi:</p>
+    <div class="code-container">
+        <pre><code class="code">SELECT generate_series(1, 10, 2);</code></pre>
+    </div>
+    <p>Natija:</p>
+    <div class="code-container">
+        <pre><code class="code">generate_series
+-----------------
+               1
+               3
+               5
+               7
+               9
+(5 rows)</code></pre>
+    </div>
+    <hr>
+
+    <h2>Barcha funksiyalarni birlashtirib, katta hajmli test ma'lumot yaratish</h2>
+    <p>Masalan, quyidagi so‘rov tasodifiy URL manzillar yaratadi:</p>
+    <div class="code-container">
+        <pre><code class="code">SELECT 'https://example.com/' || trunc(random() * 1000000) || '.html' FROM generate_series(1, 100);</code></pre>    
+    </div>
+    <p>Yuqoridagi so‘rov 100 ta tasodifiy URL manzil yaratadi.</p>
+    <p>Agar boshqa ma'lumotlar kerak bo‘lsa, <code class="code-in-text">repeat()</code> va <code class="code-in-text">random()</code> funksiyalari ishlatiladi.</p>
+    <p>Masalan, quyidagi so‘rov 100 ta tasodifiy ism va familiya yaratadi:</p>
+    <div class="code-container">
+        <pre><code class="code">SELECT repeat(chr(trunc(random() * 26) + 65), 5) || ' ' || repeat(chr(trunc(random() * 26) + 65), 5) FROM generate_series(1, 100);</code></pre>
+    </div>
+
+    <p>Masalan, quyidagi so‘rov tasodifiy URL manzillar yaratadi:</p>
+    <div class="code-container">
+        <pre><code class="code">SELECT 'sql4e.com/neon' || trunc(random() * 1000000) || repeat('lemon', 5) 
+            FROM generate_series(1, 5);
+            </code></pre>
+    </div>
+
+    <p>Yuqoridagi so‘rov 5 ta tasodifiy URL manzil yaratadi.</p>
+    <p>Natija:</p>
+
+    <div class="code-container">
+        <pre><code class="code">?column?
+-------------------------
+sql4e.com/neon725348lemonlemonlemonlemonlemon  
+sql4e.com/neon134865lemonlemonlemonlemonlemon  
+sql4e.com/neon987621lemonlemonlemonlemonlemon  
+sql4e.com/neon452198lemonlemonlemonlemonlemon  
+sql4e.com/neon372065lemonlemonlemonlemonlemon  
+(5 rows)</code></pre>
+    </div>
+    <p>Bu yondashuv katta hajmdagi test ma'lumotlarini osongina yaratish imkonini beradi.</p>
+    <hr>
+    </body>
+</html>
