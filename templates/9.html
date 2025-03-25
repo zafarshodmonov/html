@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veb-skrayping va Indekslash</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 20px; }
+        h1, h2, h3 { color: #2c3e50; }
+        ul { margin-left: 20px; }
+        code { background: #ecf0f1; padding: 2px 5px; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <h1>Veb-skrayping va ma’lumotlarni saqlash uchun indekslash usullari</h1>
+    
+    <h2>1. Veb-skrayping va ma’lumotlarni saqlash</h2>
+    <ul>
+        <li>Veb-skrayperlar sahifalarni yuklab olib, ichki havolalarni navbatga qo‘shadi.</li>
+        <li>Qayta ishlangan URL-larni saqlash kerak, chunki bir sahifada bir necha marta bir xil havola uchrashi mumkin.</li>
+        <li><strong>Ma’lumotlar bazasi</strong> veb-skraypingda muhim ahamiyatga ega, chunki katta hajmdagi sahifalarni xotirada saqlash mumkin emas.</li>
+    </ul>
+    
+    <h2>2. URL-lar va indekslash muammosi</h2>
+    <ul>
+        <li>URL-larning uzunligi har xil bo‘lishi mumkin, shuning uchun <code>VARCHAR(128)</code> yoki <code>VARCHAR(1024)</code> kabi uzunliklarni cheklash noto‘g‘ri bo‘lishi mumkin.</li>
+        <li>Postgres haddan tashqari uzun URL-lar bilan ishlashda <strong>xatolarga</strong> duch kelishi mumkin.</li>
+    </ul>
+    
+    <h2>3. Indeks turlari va ularning samaradorligi</h2>
+    <ul>
+        <li><strong>Oddiy indeks</strong>: <code>CREATE UNIQUE INDEX ON cr2 (url);</code>
+            <ul>
+                <li>B-tree indeksidan foydalaniladi.</li>
+                <li>To‘g‘ridan-to‘g‘ri URL-larni saqlaydi, lekin uzunligi tufayli katta joy egallaydi.</li>
+            </ul>
+        </li>
+        <li><strong>MD5 bilan indekslash</strong>:
+            <ul>
+                <li>URL-larning <strong>MD5 hash qiymati</strong> olinib, indeksda saqlanadi.</li>
+                <li>B-tree indeksidan foydalanib, URL-lar emas, balki ularning qisqa <strong>hash qiymatlari</strong> saqlanadi.</li>
+                <li>Joyni tejaydi va tezkor qidiruvni ta’minlaydi.</li>
+            </ul>
+        </li>
+        <li><strong>UUID bilan indekslash</strong>:
+            <ul>
+                <li><code>MD5(url)::UUID</code> sifatida saqlanadi.</li>
+                <li>Joyni tejaydi va tezkor qidiruvni ta’minlaydi.</li>
+            </ul>
+        </li>
+        <li><strong>Hash indeks</strong>:
+            <ul>
+                <li><code>CREATE INDEX cr4_hash ON cr2 USING hash (url);</code></li>
+                <li>Faqat <strong>aniq mos keluvchi qidiruvlar</strong> uchun samarali.</li>
+                <li>Joyni tejaydi, lekin <strong>sorting yoki interval bo‘yicha qidiruv</strong> uchun mos emas.</li>
+            </ul>
+        </li>
+    </ul>
+    
+    <h2>4. Samaradorlik tahlili</h2>
+    <ul>
+        <li><strong>B-tree (to‘g‘ridan-to‘g‘ri URL)</strong> – Eng yirik hajmni egallaydi, lekin aniq qidiruv uchun yaxshi ishlaydi.</li>
+        <li><strong>B-tree (MD5 hash)</strong> – Kichikroq hajm egallaydi va ancha tez ishlaydi.</li>
+        <li><strong>UUID bilan indekslash</strong> – Kichikroq joy talab qiladi va ancha samarali.</li>
+        <li><strong>Hash indeks</strong> – Eng kichik hajmni egallaydi va faqat <strong>exact match</strong> uchun samarali ishlaydi.</li>
+    </ul>
+    
+    <h2>Xulosa</h2>
+    <ul>
+        <li>Har bir indeks turi <strong>foydalanish holatiga bog‘liq ravishda tanlanishi kerak</strong>.</li>
+        <li>MD5 va UUID indekslari <strong>tejamkor va samarali</strong> yechim bo‘lib, umumiy URL indekslash uchun yaxshi tanlov hisoblanadi.</li>
+        <li>Hash indekslari <strong>faqat aniq mos keluvchi qidiruvlar uchun mos</strong> va interval qidiruvi talab qilingan hollarda <strong>B-tree afzal</strong>.</li>
+    </ul>
+    
+    <p><strong>Kelgusi mavzu:</strong> regulyar ifodalar (regular expressions) bilan ishlash.</p>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            padding: 20px;
+        }
+        h3 {
+            margin-top: 20px;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-left: 3px solid #c66;
+        }
+        code {
+            font-size: 1.2em;
+            color: #c66;
+        }
+        blockquote {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-left: 3px solid #c66;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Character Sets</h1>
+
+
+<p>Bu matn kompyuterlarda ishlatiladigan <strong>belgi to&lsquo;plamlari</strong> (character sets) haqida batafsil tushuntirish beradi. Keling, uni qisqacha tushuntirib chiqamiz.</p>
+<hr />
+<h3><strong>1. ASCII va EBCDIC</strong></h3>
+<ul>
+<li>Dastlab kompyuterlarda <strong>faqat katta harflar</strong> mavjud edi, chunki <strong>xotira juda qimmat</strong> bo&lsquo;lgan.</li>
+<li>6-bit belgi to&lsquo;plami kamroq joy egallaganligi sababli, kichik harflar kiritilmagan edi.</li>
+<li><strong>ASCII</strong> (American Standard Code for Information Interchange) &ndash; keng qo&lsquo;llanilgan belgi to&lsquo;plami bo&lsquo;lib, 8-bitdan iborat (0-127 oralig&lsquo;ida belgilangan).</li>
+<li><strong>EBCDIC</strong> &ndash; IBM tomonidan ishlatilgan, lekin ASCII undan ancha yaxshiroq bo&lsquo;lgan.</li>
+<li>ASCII ning afzalligi shundaki, harflar tartib bilan joylashgan (A = 65, B = 66, C = 67 va hokazo).</li>
+</ul>
+<h3><strong>2. ASCII kodlari va dasturlash</strong></h3>
+<ul>
+<li>Har bir harf, belgi yoki raqam kompyuter xotirasida <strong>raqam sifatida</strong> saqlanadi.</li>
+<li>Masalan, <code>H = 72</code>, <code>e = 101</code>, <code>* = 42</code>.</li>
+<li>Bu kodlar <strong>sorting</strong> (saralash) va boshqa matn operatsiyalarida ishlatiladi.</li>
+<li>Dasturlash tillari ASCII kodlarini tahlil qilib turli matematik operatsiyalar bajarishi mumkin.</li>
+</ul>
+<h3><strong>3. Kengaytirilgan ASCII va muammolar</strong></h3>
+<ul>
+<li>Dastlab, ASCII faqat <strong>127 ta belgi</strong> ni o&lsquo;z ichiga olgan.</li>
+<li>Keyinchalik <strong>256 ta belgiga kengaytirildi</strong> (<code>Latin-1</code>, <code>Windows-1252</code> va boshqalar).</li>
+<li>Har xil kodlash tizimlari bir-biriga mos kelmaganligi sababli <strong>muammolar</strong> yuzaga kelgan (masalan, Ispaniyadan AQShga fayl yuborilganda belgilar buzilishi mumkin edi).</li>
+</ul>
+<h3><strong>4. Unicode va UTF-8</strong></h3>
+<ul>
+<li><strong>Unicode</strong> &ndash; bitta katta universal belgi to&lsquo;plami bo&lsquo;lib, 2 milliardgacha belgilarni o&lsquo;z ichiga olishi mumkin.</li>
+<li><strong>UTF-8</strong> &ndash; Unicode kodlash tizimi bo&lsquo;lib, <strong>1 dan 4 baytgacha</strong> o&lsquo;zgaruvchan uzunlikda ishlaydi.
+<ul>
+<li><strong>0-127 oralig&lsquo;idagi ASCII belgilari</strong> bir baytda saqlanadi.</li>
+<li>Murakkab belgilar esa 2, 3 yoki 4 baytda saqlanishi mumkin.</li>
+</ul>
+</li>
+<li>UTF-8 ni ishlatish <strong>kompyuter xotirasidan samarali foydalanish</strong> imkonini beradi va turli tillardagi matnlarni to&lsquo;g&lsquo;ri saqlashga yordam beradi.</li>
+</ul>
+<h3><strong>5. UTF-8 ning afzalliklari</strong></h3>
+<ul>
+<li><strong>ASCII bilan mos keladi</strong> (ya&rsquo;ni, eski ASCII fayllar UTF-8 da ham ishlaydi).</li>
+<li><strong>Hamma tillarni qo&lsquo;llab-quvvatlaydi</strong> (lotin, kirill, xitoy, arab va boshqalar).</li>
+<li><strong>Fayllarni noto&lsquo;g&lsquo;ri kodlashdan saqlaydi</strong> (UTF-8 noto&lsquo;g&lsquo;ri yozilgan ma&rsquo;lumotlarni aniqlashi mumkin).</li>
+</ul>
+<hr />
+<p>Bu mavzu <strong>PostgreSQL</strong>, <strong>Python</strong>, <strong>vazifalarni saralash</strong>, va <strong>xalqaro dasturlash standartlari</strong> uchun juda muhim. Agar siz <strong>ma&rsquo;lumotlar tahlili</strong> yoki <strong>back-end dasturlash</strong> bilan shug&lsquo;ullanayotgan bo&lsquo;lsangiz, ushbu kodlash tizimlari haqida tushuncha bo&lsquo;lishi zarur.</p>
+<h3><strong>Belgilar To&lsquo;plami (Character Sets) va Unicode</strong></h3>
+<h4><strong>1. ASCII va Dastlabki Belgilar To&lsquo;plami</strong></h4>
+<p>Dastlabki kompyuter tizimlarida har bir belgini kodlash uchun cheklangan miqdordagi bitlar ajratilgan edi. Masalan, eski <strong>CDC 6500</strong> kompyuterlarida kichik harflar mavjud emas edi, chunki harflarni saqlash uchun <strong>6-bitli</strong> kodlash ishlatilgan. Bu esa har bir harfni tasvirlash uchun kamroq xotira talab qilardi. ASCII kodlash esa <strong>8-bit</strong> edi, bu esa yanada ko&lsquo;proq xotira talab qilgan.</p>
+<p><strong>ASCII (American Standard Code for Information Interchange)</strong> &ndash; bu dastlabki belgilar to&lsquo;plamidir va quyidagi xususiyatlarga ega:</p>
+<ul>
+<li><strong>0 dan 127 gacha</strong> bo&lsquo;lgan sonlar har bir belgiga mos keladi.</li>
+<li>Birinchi 32 ta belgi <strong>bosilmaydigan belgilar</strong> (masalan, yangi qator <code>\n</code>, <code>Tab</code>, <code>Backspace</code>).</li>
+<li>Keyingi qatorda <code>!</code>, <code>@</code>, <code>#</code>, <code>$</code> kabi <strong>belgilar</strong> joylashgan.</li>
+<li>Sonlar <strong>48 dan 57 gacha</strong> (<code>0-9</code> raqamlari).</li>
+<li>Katta harflar <strong>65 dan 90 gacha</strong> (<code>A-Z</code>).</li>
+<li>Kichik harflar <strong>97 dan 122 gacha</strong> (<code>a-z</code>).</li>
+</ul>
+<p><strong>Muammo:</strong> ASCII faqat <strong>127</strong> ta belgini o&lsquo;z ichiga olgani uchun turli tillar uchun yetarli emas edi.</p>
+<h4><strong>2. ASCII ning Kengaytirilgan Versiyalari</strong></h4>
+<p>ASCII ning oddiy versiyasi faqat <strong>127</strong> ta belgidan iborat bo&lsquo;lsa-da, <strong>8-bitli kengaytirilgan versiyalar</strong> paydo bo&lsquo;ldi:</p>
+<ul>
+<li><strong>Latin-1 (ISO 8859-1)</strong> &ndash; Yevropa tillarining maxsus harflarini (umlaut <code>&uuml;</code>, <code>&ouml;</code>, <code>&ntilde;</code> kabi belgilar) qo&lsquo;shdi.</li>
+<li><strong>Windows-1252</strong> &ndash; Microsoft tomonidan ishlab chiqilgan va qo&lsquo;shimcha maxsus belgilarni o&lsquo;z ichiga olgan.</li>
+<li><strong>Cyrillic (ISO 8859-5)</strong> &ndash; Rus va boshqa slavyan tillari uchun.</li>
+</ul>
+<p>Bu kengaytirilgan ASCII versiyalari <strong>256</strong> ta belgi saqlash imkonini berdi, ammo turli kodlash turlarining mavjudligi chalkashliklarga sabab bo&lsquo;ldi.</p>
+<h4><strong>3. Unicode: Global Yechim</strong></h4>
+<p>ASCII va boshqa kodlash tizimlaridagi muammolarni hal qilish uchun <strong>Unicode</strong> ishlab chiqildi. Unicode har bir belgi uchun <strong>universal raqam</strong> ajratib, ularni butun dunyo bo&lsquo;ylab standartlashtirdi.</p>
+<p>Unicode xususiyatlari:</p>
+<ul>
+<li><strong>21-bitli kodlash</strong> &ndash; bu taxminan <strong>2 milliondan ortiq</strong> belgilarga joy ajratish imkonini beradi.</li>
+<li><strong>137,000+ belgi</strong> &ndash; hozirda turli yozuv tizimlarini o&lsquo;z ichiga oladi.</li>
+<li><strong>150+ belgilar to&lsquo;plami</strong> &ndash; har bir til yoki maxsus belgilarning o&lsquo;z joyi mavjud.</li>
+</ul>
+<p>Unicode ning asosiy usullari:</p>
+<ul>
+<li><strong>UTF-32</strong> &ndash; har bir belgini <strong>32 bit (4 bayt)</strong> sifatida saqlaydi. Juda ko&lsquo;p joy talab qiladi.</li>
+<li><strong>UTF-16</strong> &ndash; har bir belgini <strong>16 bit (2 bayt)</strong> yoki ba'zan 4 baytda saqlaydi.</li>
+<li><strong>UTF-8</strong> &ndash; <strong>dinamik kodlash</strong> usuli. ASCII bilan mos keladi va eng samarali format hisoblanadi.</li>
+</ul>
+<h4><strong>4. UTF-8: Eng Samarali Yechim</strong></h4>
+<p><strong>UTF-8</strong> &ndash; Unicode ni siqilgan holda saqlash usuli bo&lsquo;lib, u quyidagicha ishlaydi:</p>
+<ul>
+<li><strong>ASCII (0-127) belgilar</strong> 1 baytda saqlanadi.</li>
+<li><strong>128-2047 oraliq belgilar</strong> 2 baytda saqlanadi.</li>
+<li><strong>2048-65535</strong> belgilar 3 baytda saqlanadi.</li>
+<li><strong>65536 va undan yuqori</strong> belgilar 4 baytda saqlanadi.</li>
+</ul>
+<p>Bu usul turli tildagi matnlarni ixcham saqlash imkonini beradi. <strong>Ko&lsquo;pchilik tizimlar (PostgreSQL, Python, JSON)</strong> <strong>standart kodlash</strong> sifatida UTF-8 dan foydalanadi.</p>
+<h4><strong>5. PostgreSQL va Belgilar To&lsquo;plami</strong></h4>
+<p>PostgreSQL ma&rsquo;lumotlar bazasida matnni kodlashni tekshirish va o&lsquo;lchash uchun quyidagi funksiyalar mavjud:</p>
+<ul>
+<li><code>char_length(text)</code> &ndash; belgilar sonini hisoblaydi.</li>
+<li><code>octet_length(text)</code> &ndash; saqlash uchun ajratilgan <strong>baytlar sonini</strong> hisoblaydi.</li>
+<li><code>bit_length(text)</code> &ndash; saqlash uchun ajratilgan <strong>bitlar sonini</strong> hisoblaydi.</li>
+<li><code>ascii(character)</code> &ndash; berilgan belgining ASCII kodini chiqaradi.</li>
+<li><code>chr(integer)</code> &ndash; berilgan ASCII yoki Unicode kodiga mos keluvchi belgini chiqaradi.</li>
+</ul>
+<p>Misollar:</p>
+<pre><code class="language-sql">SELECT ascii('H');  -- 72
+SELECT chr(42);     -- '*'
+SELECT char_length('你好');  -- 2
+SELECT octet_length('你好');  -- 6 (3 bayt * 2 ta belgi)
+</code></pre>
+<h4><strong>Xulosa</strong></h4>
+<ul>
+<li>ASCII faqat 127 ta belgidan iborat va faqat <strong>ingliz tili uchun</strong> qulay.</li>
+<li>Unicode barcha dunyo tillarining belgilarini o&lsquo;z ichiga oladi.</li>
+<li>UTF-8 &ndash; eng samarali kodlash usuli bo&lsquo;lib, <strong>ko&lsquo;pgina dasturlar va ma&rsquo;lumotlar bazalarida ishlatiladi</strong>.</li>
+<li>PostgreSQL UTF-8 ni qo&lsquo;llab-quvvatlaydi va <strong>belgilar o&lsquo;lchami</strong> va <strong>kodlash tafsilotlarini tekshirish</strong> uchun bir nechta foydali funksiyalarni taqdim etadi.</li>
+</ul>
+<p>Agar qo&lsquo;shimcha tushuntirish yoki kod namunalarini kiritish kerak bo&lsquo;lsa, xabar bering! 🚀</p>
+
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL va Regular Expressions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        pre {
+            background: #ecf0f1;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: Consolas, monospace;
+            color: #c0392b;
+        }
+        ul {
+            background: #fff;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>SQLda Regular Expressions (Muntazam Ifodalar)</h1>
+    <h2>1. WHERE sharti va REGEXP ishlatish</h2>
+    <p>SQLda <strong>WHERE sharti</strong> va muntazam ifodalar yordamida kerakli qatorlarni tanlash mumkin. Bunga qo‘shimcha ravishda, natija sifatida olingan ustunlardagi matnlar ham <strong>parsing</strong> (ajratib olish) qilinishi mumkin.</p>
+    
+    <h2>2. Muntazam ifodalar yordamida ustundagi matnni ajratish</h2>
+    <h3>Email ustunidan raqamlarni ajratib olish</h3>
+    <pre><code>SELECT substring(email FROM '[0-9]+') FROM users;</code></pre>
+    <ul>
+        <li><code>[0-9]</code> – raqamlarni bildiradi.</li>
+        <li><code>+</code> – kamida bitta raqam bo‘lishi kerak.</li>
+    </ul>
+    
+    <h3>Email ustunidan domen nomini ajratib olish</h3>
+    <pre><code>SELECT substring(email FROM '@(.+)$') FROM users;</code></pre>
+    <ul>
+        <li><code>@</code> – email ichida <code>@</code> belgisi bor joygacha qidiriladi.</li>
+        <li><code>(.+)$</code> – <code>@</code> dan keyingi qismi (domen) chiqariladi.</li>
+    </ul>
+    
+    <h2>3. DISTINCT va GROUP BY yordamida domenlar sonini sanash</h2>
+    <pre><code>SELECT substring(email FROM '@(.+)$') AS domain, COUNT(*) 
+FROM users 
+GROUP BY domain;</code></pre>
+    
+    <h2>4. REGEXP_MATCHES funksiyasi yordamida barcha mos kelgan natijalarni olish</h2>
+    <pre><code>SELECT regexp_matches(email, '[0-9]+', 'g') FROM users;</code></pre>
+    <p><code>'g'</code> flagi barcha mosliklarni olishga majbur qiladi.</p>
+    
+    <h2>5. Hashtaglarni ajratib olish va sanash</h2>
+    <pre><code>SELECT regexp_matches(tweet, '#([A-Za-z0-9_]+)', 'g') FROM tweets;</code></pre>
+    <p>Takroriy hashtaglarni chiqarish uchun:</p>
+    <pre><code>SELECT DISTINCT regexp_matches(tweet, '#([A-Za-z0-9_]+)', 'g') FROM tweets;</code></pre>
+    
+    <h2>6. Tweet ID bilan hashtaglarni bog‘lash</h2>
+    <pre><code>SELECT tweet_id, regexp_matches(tweet, '#([A-Za-z0-9_]+)', 'g') FROM tweets;</code></pre>
+    
+    <h2>Xulosa</h2>
+    <p>Ushbu maqolada SQLda muntazam ifodalardan foydalanib, matnlarni qanday ajratish va tahlil qilish tushuntirilgan:</p>
+    <ul>
+        <li>Email ustunidan raqam va domenlarni ajratish</li>
+        <li>Distinct va Group By yordamida takroriy email domenlarini sanash</li>
+        <li>REGEXP_MATCHES funksiyasi yordamida barcha mos kelgan natijalarni olish</li>
+        <li>Hashtaglarni SQLda ajratib olish va tweet ID bilan bog‘lash</li>
+    </ul>
+</body>
+</html>

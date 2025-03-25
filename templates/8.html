@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hash Funksiyalar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: auto;
+        }
+        h2 {
+            color: #2c3e50;
+        }
+        ul {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Hash Funksiyalar va Ularning Qo‘llanilishi</h1>
+    
+    <h2>1. Hash nima?</h2>
+    <ul>
+        <li>Hash – bu katta hajmdagi ma’lumotni (bitta belgidan million belgigacha) qabul qilib, uni <strong>belgilangan uzunlikdagi</strong> qiymatga o‘zgartiradigan funksiya.</li>
+        <li>Xuddi shu ma’lumot qayta ishlanganda doimo bir xil hash qiymati olinadi.</li>
+    </ul>
+    
+    <h2>2. Hash funksiyalar nima uchun kerak?</h2>
+    <ul>
+        <li><strong>Ma’lumotni tekshirish (checksum):</strong>
+            <ul>
+                <li>Internet yoki tarmoq orqali uzatilayotgan ma’lumot buzilmaganligini tekshirish uchun ishlatiladi.</li>
+                <li>Masalan, Wi-Fi yoki Ethernetda hash yordamida xatolik aniqlansa, ma’lumot qayta yuboriladi.</li>
+            </ul>
+        </li>
+        <li><strong>Kriptografik xavfsizlik:</strong>
+            <ul>
+                <li>Hash funksiyalar <strong>imzo</strong> yoki <strong>ma’lumotni tekshirish</strong> uchun ishlatiladi.</li>
+                <li>Masalan, parollar to‘g‘ridan-to‘g‘ri saqlanmasdan, ularning hash versiyasi saqlanadi.</li>
+            </ul>
+        </li>
+    </ul>
+    
+    <h2>3. Hash funksiyalar qanday xususiyatlarga ega bo‘lishi kerak?</h2>
+    <ul>
+        <li><strong>Deterministik:</strong> Har safar bir xil kirish ma’lumoti uchun bir xil natija hosil qiladi.</li>
+        <li><strong>Sezgir (Sensitive):</strong> Ma’lumotdagi kichik o‘zgarish ham hash qiymatini butunlay o‘zgartiradi.</li>
+        <li><strong>Teng taqsimot (Uniform distribution):</strong> Hash funksiyasi natijalari bir xil ehtimollik bilan barcha mumkin bo‘lgan qiymatlarni qamrab olishi kerak.</li>
+        <li><strong>Bir yo‘nalishli (One-way):</strong> Hash qiymatidan asl ma’lumotni qayta tiklab bo‘lmaydi.</li>
+    </ul>
+    
+    <h2>4. Hash funksiyalar va ularning kamchiliklari</h2>
+    <ul>
+        <li><strong>MD5:</strong>
+            <ul>
+                <li>Oldin juda mashhur bo‘lgan, ammo hozir <strong>kriptografiya uchun ishonchsiz</strong> deb hisoblanadi.</li>
+                <li>Sababi, unda <strong>kollision</strong> (ikki turli kirish ma’lumoti bir xil hash natijasini hosil qilishi) muammosi mavjud.</li>
+                <li><strong>"Rainbow tables"</strong> kabi usullar yordamida ba’zi hash qiymatlarining asl ma’lumotini tiklash mumkin.</li>
+            </ul>
+        </li>
+        <li><strong>SHA-256:</strong>
+            <ul>
+                <li>MD5dan yaxshiroq va <strong>hozirda xavfsiz</strong> hisoblanadi.</li>
+                <li><strong>256 bitli hash</strong> hosil qiladi va juda katta ma’lumotlarni bir xil uzunlikdagi hash qiymatga aylantiradi.</li>
+            </ul>
+        </li>
+    </ul>
+    
+    <h2>5. Hash qanday ishlaydi?</h2>
+    <ul>
+        <li>Matnda <strong>oddiy hash algoritmi</strong> kod orqali tushuntirilgan.</li>
+        <li>Harf yoki raqamlar <strong>bit shaklida</strong> ko‘rsatiladi, so‘ngra <strong>siljitish (shift)</strong> va <strong>eksklyuziv OR (XOR)</strong> operatsiyalari orqali yangi hash hosil qilinadi.</li>
+        <li>Hash funksiyalar ma’lumotni qayta ishlash va indekslash jarayonida <strong>PostgreSQL</strong> kabi ma’lumotlar bazalarida ishlatiladi.</li>
+    </ul>
+    
+    <h2>Xulosa</h2>
+    <p>Matn <strong>hash funksiyalar</strong> ning qanday ishlashini tushuntiradi, ularning tarmoqlarda, xavfsizlikda va ma’lumotlar bazalarida qanday ahamiyatga ega ekanligini ko‘rsatadi. Shuningdek, <strong>MD5 va SHA-256</strong> kabi hash algoritmlarining afzallik va kamchiliklarini ham yoritadi.</p>
+</body>
+</html>

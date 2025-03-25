@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python’dagi Character Sets va Encoding</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 20px; }
+        h1, h2, h3 { color: #333; }
+        code { background: #f4f4f4; padding: 2px 5px; border-radius: 3px; }
+        pre { background: #f4f4f4; padding: 10px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Python’dagi Belgi To‘plamlari va Kodlash (Encoding/Decoding)</h1>
+    
+    <h2>1. Python 2 va Python 3: Belgilarni Saqlashdagi Farq</h2>
+    <h3>Python 2</h3>
+    <ul>
+        <li><b>Satrlar ASCII formatida saqlangan</b>: Python 2 matnli ma’lumotlarni <code>8-bit ASCII</code> sifatida ifodalagan.</li>
+        <li><b>Kodlash cheklangan</b>: ASCII faqat 127 ta belgini o‘z ichiga olgan.</li>
+        <li><b>Xalqaro tillar uchun qo‘shimcha kodlashlar ishlatilgan</b>: Masalan, <code>Latin-1</code>, <code>Windows-1252</code>, <code>Shift_JIS</code>.</li>
+    </ul>
+    
+    <h3>Python 3</h3>
+    <ul>
+        <li><b>Unicode ichki format sifatida qabul qilingan</b>.</li>
+        <li><b>Dunyo tillarining hammasini qo‘llab-quvvatlaydi</b>.</li>
+        <li><b>Unicode muammolarni hal qildi</b> va bugungi kunda standartga aylangan.</li>
+    </ul>
+    
+    <h2>2. Unicode va UTF-8 O‘rtasidagi Farq</h2>
+    <p><b>Unicode</b> xalqaro standart bo‘lib, har bir belgi o‘ziga xos kodga ega. Uni turli formatlarda saqlash mumkin:</p>
+    <ul>
+        <li><b>UTF-8</b>: Eng ko‘p ishlatiladigan format, ASCII bilan mos.</li>
+        <li><b>UTF-16</b>: 2 yoki 4 bayt, Windows va Java tizimlarida ishlatiladi.</li>
+        <li><b>UTF-32</b>: Har bir belgi 4 bayt, juda katta hajm talab qiladi.</li>
+    </ul>
+    
+    <h2>3. Kodlash (Encoding) va Dekodlash (Decoding)</h2>
+    <h3>Kodlash:</h3>
+    <pre><code>text = "Salom"
+encoded_text = text.encode('utf-8')
+print(encoded_text)  # b'Salom'</code></pre>
+    
+    <h3>Dekodlash:</h3>
+    <pre><code>decoded_text = encoded_text.decode('utf-8')
+print(decoded_text)  # Salom</code></pre>
+    
+    <h2>4. Python 3 da Fayllar, Tarmoqlar va Ma’lumotlar Bazalarida Kodlash</h2>
+    <h3>Fayllar bilan ishlash:</h3>
+    <pre><code>with open("file.txt", "w", encoding="utf-8") as f:
+    f.write("Salom Dunyo")</code></pre>
+    
+    <h3>Tarmoq orqali kodlash:</h3>
+    <pre><code>import socket
+s = socket.socket()
+s.connect(('example.com', 80))
+s.send(b'GET / HTTP/1.1\r\nHost: example.com\r\n\r\n')
+response = s.recv(4096)
+print(response.decode('utf-8'))</code></pre>
+    
+    <h3>Ma’lumotlar bazasi bilan ishlash:</h3>
+    <pre><code>import sqlite3
+conn = sqlite3.connect("database.db")
+conn.execute("PRAGMA encoding = 'UTF-8'")</code></pre>
+    
+    <h2>5. Xulosa</h2>
+    <ul>
+        <li>Python 3 <b>Unicode</b> ishlatadi, lekin tashqi tizimlar <b>UTF-8</b> talab qiladi.</li>
+        <li>Agar belgilar noto‘g‘ri chiqsa, kodlash va dekodlashni tekshirish kerak.</li>
+    </ul>
+</body>
+</html>

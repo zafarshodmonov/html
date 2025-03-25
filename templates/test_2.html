@@ -1,0 +1,166 @@
+<h3><strong>7.8.2. Recursive Queries</strong></h3>
+<h4><strong>O&lsquo;zbekcha</strong></h4>
+<p>Rekursiv so&lsquo;rovlar odatda ierarxik ma&rsquo;lumotlarni yoki rekursiv munosabatlarni ishlash uchun qo&lsquo;llaniladi. PostgreSQL&rsquo;da rekursiv so&lsquo;rovlar <strong>WITH RECURSIVE</strong> operatori yordamida amalga oshiriladi.</p>
+<hr />
+<h3><strong>Rekursiv CTE Tuzilishi</strong></h3>
+<p>Rekursiv <strong>Common Table Expression (CTE)</strong> ikki qismdan iborat:</p>
+<ol>
+<li><strong>Anchor qismi</strong> &ndash; rekursiyani boshlovchi boshlang&lsquo;ich natijalar.</li>
+<li><strong>Rekursiv qismi</strong> &ndash; natijalarga yangi satrlarni qo&lsquo;shib boradigan qism.</li>
+</ol>
+<hr />
+<h3><strong>Oddiy Misol</strong></h3>
+<p>Keling, 1 dan 10 gacha sonlarni rekursiv so&lsquo;rov orqali hosil qilamiz:</p>
+<pre><code>WITH RECURSIVE count_numbers(n) AS (
+ SELECT 1 -- Anchor qismi
+ UNION ALL
+ SELECT n + 1 -- Rekursiv qismi
+ FROM count_numbers
+ WHERE n &lt; 10
+)
+SELECT * FROM count_numbers;
+</code></pre>
+<p><strong>Natija:</strong></p>
+<pre><code> n
+----
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+</code></pre>
+<hr />
+<h3><strong>Ierarxik Ma&rsquo;lumotlar Uchun Misol</strong></h3>
+<p>Keling, xodimlar tuzilmasini saqlovchi <code>employees</code> jadvalini yaratamiz va unga ma&rsquo;lumot kiritamiz.</p>
+<h4><strong>Jadval Yaratish:</strong></h4>
+<pre><code>CREATE TABLE employees (
+ id SERIAL PRIMARY KEY,
+ name TEXT NOT NULL,
+ manager_id INT REFERENCES employees(id)
+);
+</code></pre>
+<h4><strong>Ma&rsquo;lumot Qo&lsquo;shish:</strong></h4>
+<pre><code>INSERT INTO employees (name, manager_id) VALUES
+('Ali', NULL), -- CEO (bosh menejer)
+('Bekzod', 1), -- Ali'ga bo'ysunadi
+('Dilnoza', 1), -- Ali'ga bo'ysunadi
+('Elyor', 2), -- Bekzodga bo'ysunadi
+('Farhod', 2), -- Bekzodga bo'ysunadi
+('Gulnoza', 3), -- Dilnozaga bo'ysunadi
+('Hasan', 4), -- Elyorga bo'ysunadi
+('Iroda', 5); -- Farhodga bo'ysunadi
+</code></pre>
+<h4><strong>Rekursiv So&lsquo;rov: Xodimlar Ierarxiyasini Topish</strong></h4>
+<p>Keling, <code>Ali</code> va uning bo&lsquo;ysunuvidagi barcha xodimlarni topamiz:</p>
+<pre><code>WITH RECURSIVE employee_hierarchy AS (
+ SELECT id, name, manager_id
+ FROM employees
+ WHERE id=1 -- Ildiz xodimni tanlash (masalan, CEO - Ali)
+ UNION ALL
+ SELECT e.id, e.name, e.manager_id
+ FROM employees e
+ JOIN employee_hierarchy eh ON e.manager_id = eh.id
+)
+SELECT * FROM employee_hierarchy;
+</code></pre>
+<p><strong>Natija:</strong></p>
+<pre><code> id | name | manager_id
+----+---------+------------
+ 1 | Ali | NULL
+ 2 | Bekzod | 1
+ 3 | Dilnoza | 1
+ 4 | Elyor | 2
+ 5 | Farhod | 2
+ 6 | Gulnoza | 3
+ 7 | Hasan | 4
+ 8 | Iroda | 5
+</code></pre>
+<p>Bu so&lsquo;rov <code>id = 1</code> bo&lsquo;lgan xodim va unga bo&lsquo;ysunuvchi barcha xodimlarni chiqaradi.</p>
+<hr />
+<h4><strong>English</strong></h4>
+<p>Recursive queries are used to work with hierarchical data or recursive relationships. In PostgreSQL, recursive queries are implemented using the <strong>WITH RECURSIVE</strong> clause.</p>
+<hr />
+<h3><strong>Structure of a Recursive CTE</strong></h3>
+<p>A <strong>Common Table Expression (CTE)</strong> with recursion consists of two parts:</p>
+<ol>
+<li><strong>Anchor part</strong> &ndash; the base result that starts the recursion.</li>
+<li><strong>Recursive part</strong> &ndash; the part that adds new rows iteratively.</li>
+</ol>
+<hr />
+<h3><strong>Simple Example</strong></h3>
+<p>Let&rsquo;s generate numbers from 1 to 10 using a recursive query:</p>
+<pre><code>WITH RECURSIVE count_numbers(n) AS (
+ SELECT 1 -- Anchor part
+ UNION ALL
+ SELECT n + 1 -- Recursive part
+ FROM count_numbers
+ WHERE n &lt; 10
+)
+SELECT * FROM count_numbers;
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code> n
+----
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+</code></pre>
+<hr />
+<h3><strong>Example: Hierarchical Data</strong></h3>
+<p>Let&rsquo;s create an <code>employees</code> table to represent a hierarchical employee structure and insert some data.</p>
+<h4><strong>Create Table:</strong></h4>
+<pre><code>CREATE TABLE employees (
+ id SERIAL PRIMARY KEY,
+ name TEXT NOT NULL,
+ manager_id INT REFERENCES employees(id)
+);
+</code></pre>
+<h4><strong>Insert Data:</strong></h4>
+<pre><code>INSERT INTO employees (name, manager_id) VALUES
+('Ali', NULL), -- CEO (top-level manager)
+('Bekzod', 1), -- Reports to Ali
+('Dilnoza', 1), -- Reports to Ali
+('Elyor', 2), -- Reports to Bekzod
+('Farhod', 2), -- Reports to Bekzod
+('Gulnoza', 3), -- Reports to Dilnoza
+('Hasan', 4), -- Reports to Elyor
+('Iroda', 5); -- Reports to Farhod
+</code></pre>
+<h4><strong>Recursive Query: Finding Employee Hierarchy</strong></h4>
+<p>Now, let&rsquo;s retrieve Ali and all employees reporting to him (directly or indirectly):</p>
+<pre><code>WITH RECURSIVE employee_hierarchy AS (
+ SELECT id, name, manager_id
+ FROM employees
+ WHERE id=1 -- Selecting the root employee (e.g., CEO - Ali)
+ UNION ALL
+ SELECT e.id, e.name, e.manager_id
+ FROM employees e
+ JOIN employee_hierarchy eh ON e.manager_id = eh.id
+)
+SELECT * FROM employee_hierarchy;
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code> id | name | manager_id
+----+---------+------------
+ 1 | Ali | NULL
+ 2 | Bekzod | 1
+ 3 | Dilnoza | 1
+ 4 | Elyor | 2
+ 5 | Farhod | 2
+ 6 | Gulnoza | 3
+ 7 | Hasan | 4
+ 8 | Iroda | 5
+</code></pre>
+<p>This query retrieves the employee with <code>id = 1</code> and all employees reporting to them, either directly or indirectly.</p>

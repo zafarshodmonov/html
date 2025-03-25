@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            padding: 20px;
+        }
+        h3 {
+            margin-top: 20px;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-left: 3px solid #c66;
+        }
+        code {
+            font-size: 1.2em;
+            color: #c66;
+        }
+        blockquote {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-left: 3px solid #c66;
+        }
+    </style>
+</head>
+<body>
+
+<p>Bu bo&lsquo;limda <strong>PostgreSQL</strong> ma&rsquo;lumotlar bazasida <strong>matn bilan ishlash</strong>, <strong>WHERE sharti</strong>, <strong>LIKE</strong>, <strong>SIMILAR TO</strong>, <strong>IN</strong>, va indekslardan foydalanish haqida gap ketmoqda. Quyida tushunchalar bo&lsquo;yicha izoh beraman.</p>
+<hr />
+<h3>1. <strong>WHERE va LIKE Operatorlari</strong></h3>
+<p><strong>WHERE</strong> sharti orqali tanlangan ma&rsquo;lumotlarni <strong>filtrlash</strong> mumkin.</p>
+<ul>
+<li><strong>WHERE content = 'some text'</strong> &rarr; aniq mos keladigan qiymatni qidiradi.</li>
+<li><strong>WHERE content LIKE '%text%'</strong> &rarr; <code>text</code> so&lsquo;zini o&lsquo;z ichiga olgan har qanday satrni qidiradi.</li>
+<li><strong>WHERE content SIMILAR TO '.<em>text.</em>'</strong> &rarr; <strong>regular expressions</strong> ishlatish imkonini beradi. Lekin bu standart emas va ko&lsquo;p ishlatilmaydi.</li>
+</ul>
+<blockquote>
+<p><strong>LIKE MySQL, PostgreSQL va boshqa ko&lsquo;p bazalarda ishlaydi, SIMILAR TO esa kam qo&lsquo;llaniladi.</strong></p>
+</blockquote>
+<hr />
+<h3>2. <strong>IN Operatori</strong></h3>
+<ul>
+<li><strong>IN</strong> operatori <strong>bir nechta qiymat ichidan qidirish</strong> imkonini beradi:
+<pre><code class="language-sql">SELECT * FROM table_name WHERE column_name IN ('value1', 'value2', 'value3');
+</code></pre>
+</li>
+<li><strong>PostgreSQL-da IN</strong> to&lsquo;g&lsquo;ri ishlashi uchun <strong>katta to&lsquo;plamlarda indeksdan foydalanish kerak</strong>.</li>
+</ul>
+<hr />
+<h3>3. <strong>Indekslar (Indexes) va B-tree</strong></h3>
+<p><strong>Indekslar</strong> katta hajmdagi ma&rsquo;lumotlarni <strong>tezroq qidirish</strong> uchun qo&lsquo;llaniladi.</p>
+<ul>
+<li><strong>CREATE INDEX my_index ON table_name(column_name);</strong><br /> Bu orqali <strong>B-tree</strong> indeksi yaratiladi.</li>
+<li><strong>B-tree</strong> asosiy indeks bo&lsquo;lib, <strong>tartiblash</strong>, <strong>aniq qidirish</strong> va <strong>oraliq qidiruvlar</strong> uchun yaxshi ishlaydi.</li>
+</ul>
+<blockquote>
+<p><strong>Indekslar xotirani ko&lsquo;proq egallaydi, lekin tezlikni oshiradi.</strong></p>
+</blockquote>
+<hr />
+<h3>4. <strong>Tekshirish va o&lsquo;lchash (pg_relation_size)</strong></h3>
+<ul>
+<li><strong>pg_relation_size()</strong> &rarr; <strong>jadval hajmini</strong> o&lsquo;lchaydi.</li>
+<li><strong>pg_indexes_size()</strong> &rarr; <strong>indekslarning hajmini</strong> o&lsquo;lchaydi.</li>
+</ul>
+<blockquote>
+<p><strong>Indeks ko&lsquo;p joy egallashi mumkin, lekin bu qidiruv tezligini oshiradi.</strong></p>
+</blockquote>
+<hr />
+<h3>5. <strong>SELECT bilan INSERT</strong></h3>
+<p><strong>INSERT INTO ... SELECT</strong> yordamida <strong>bitta buyruqda</strong> bir nechta qator qo&lsquo;shish mumkin:</p>
+<pre><code class="language-sql">INSERT INTO textfun (content)
+SELECT 'https://' || generate_series(100000, 200000);
+</code></pre>
+<p>Bu <strong>100,000 ta yangi yozuv qo&lsquo;shadi</strong>.</p>
+<blockquote>
+<p><strong>generate_series() sonlar ketma-ketligini yaratadi.</strong></p>
+</blockquote>
+<hr />
+<h3>6. <strong>CASE - SHARTLI QIYMATLAR</strong></h3>
+<p>SQL da <strong>IF</strong> yo&lsquo;q, <strong>CASE</strong> ishlatiladi:</p>
+<pre><code class="language-sql">SELECT 
+  CASE 
+    WHEN random() &lt; 0.5 THEN 'https'
+    ELSE 'http'
+  END
+FROM textfun;
+</code></pre>
+<p>Bu har bir satr uchun <strong>tasodifiy <code>https</code> yoki <code>http</code></strong> yaratadi.</p>
+<hr />
+<h3>7. <strong>Matn funksiyalari (String Functions)</strong></h3>
+<p><strong>PostgreSQL</strong> da matnlarni o&lsquo;zgartirish uchun maxsus funksiyalar bor:</p>
+<ul>
+<li><strong>UPPER(content)</strong> &rarr; matnni katta harfga o&lsquo;tkazish</li>
+<li><strong>LOWER(content)</strong> &rarr; matnni kichik harfga o&lsquo;tkazish</li>
+<li><strong>LEFT(content, 4)</strong> &rarr; chap tarafdan 4 ta belgini olish</li>
+<li><strong>RIGHT(content, 4)</strong> &rarr; o&lsquo;ng tarafdan 4 ta belgini olish</li>
+<li><strong>SUBSTRING(content FROM 2 FOR 4)</strong> &rarr; 2-pozitsiyadan 4 ta belgini kesib olish</li>
+<li><strong>STRPOS(content, 'https')</strong> &rarr; <code>https</code> qayerdan boshlanganini topish</li>
+<li><strong>SPLIT_PART(content, '/', 4)</strong> &rarr; 4-bo&lsquo;lakni olish (<code>https://example.com/neon</code> &rarr; <code>neon</code>)</li>
+<li><strong>TRANSLATE(content, 'thp/', 'THP_')</strong> &rarr; <strong>belgilarni almashtirish</strong>
+<ul>
+<li><code>t</code> &rarr; <code>T</code>, <code>h</code> &rarr; <code>H</code>, <code>p</code> &rarr; <code>P</code>, <code>/</code> &rarr; <code>_</code></li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>Bu funksiyalarni WHERE shartlarida ham ishlatish mumkin.</strong></p>
+</blockquote>
+<hr />
+<h3>8. <strong>EXPLAIN ANALYZE - So&lsquo;rovlarni tahlil qilish</strong></h3>
+<p>PostgreSQL <strong>so&lsquo;rovni qanday bajarishini tushunish uchun</strong> <code>EXPLAIN ANALYZE</code> buyrug&lsquo;idan foydalaniladi.</p>
+<pre><code class="language-sql">EXPLAIN ANALYZE SELECT * FROM textfun WHERE content LIKE 'racing%';
+</code></pre>
+<ul>
+<li><strong>Index Only Scan</strong> &rarr; Indeks yordamida natijani tez topish</li>
+<li><strong>Sequential Scan</strong> &rarr; <strong>Barcha qatorlarni tekshirish (yomon holat!)</strong></li>
+<li><strong>LIKE 'racing%'</strong> <strong>indeksdan foydalanadi</strong> (tez ishlaydi).</li>
+<li><strong>LIKE '%racing%'</strong> <strong>indeksdan foydalana olmaydi</strong> (sekin ishlaydi).</li>
+</ul>
+<blockquote>
+<p><strong>LIKE %text% indeksdan foydalana olmaydi, shuning uchun sekin ishlaydi.</strong></p>
+</blockquote>
+<hr />
+<h3><strong>Xulosa</strong></h3>
+<ul>
+<li><strong>LIKE</strong> operatori indeks bilan <strong>tez ishlaydi</strong>, lekin <code>%text%</code> ishlatilsa <strong>sekinlashadi</strong>.</li>
+<li><strong>Indekslar ko&lsquo;proq joy egallaydi, lekin tezlikni oshiradi</strong>.</li>
+<li><strong>CASE</strong> SQL da shartli operator sifatida ishlaydi.</li>
+<li><strong>Matn funksiyalaridan</strong> natijalarni qayta ishlash uchun foydalanish mumkin.</li>
+<li><strong>EXPLAIN ANALYZE yordamida</strong> so&lsquo;rov tezligini tekshirish mumkin.</li>
+</ul>
+<blockquote>
+<p><strong>PostgreSQL matn bilan ishlash uchun juda kuchli vositalarga ega va indekslash bilan bog&lsquo;liq muhim o&lsquo;zgarishlarni o&lsquo;rganish kerak.</strong> 🚀</p>
+</blockquote>
+
+</body>
+</html>

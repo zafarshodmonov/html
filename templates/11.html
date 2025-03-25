@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regular Expressions (Regex)</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 20px; }
+        h1, h2 { color: #2c3e50; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        table, th, td { border: 1px solid black; }
+        th, td { padding: 10px; text-align: left; }
+        strong { color: #c0392b; }
+    </style>
+</head>
+<body>
+    <h1>Regular Expressions (Regex)</h1>
+    
+    <h2>1. Regular Expressions nima?</h2>
+    <p><strong>Regular Expressions</strong> – bu matnni izlash va qayta ishlash uchun ishlatiladigan maxsus ifodalar to‘plami.</p>
+    <p>Ular dasturiy tillarning ko‘pchiligida qo‘llaniladi (JavaScript, PHP, Java, PostgreSQL va boshqalar).</p>
+    <p>Regex <strong>matnni tekshirish, ajratib olish va formatlash</strong> kabi vazifalarni bajarishda ishlatiladi.</p>
+    <p>Uning kelib chiqishi <strong>1960-1970-yillarga</strong> borib taqaladi.</p>
+    
+    <h2>2. Regular Expressions qanday ishlaydi?</h2>
+    <p>Regex <strong>oddiy belgilar</strong> yordamida yoziladi.</p>
+    <p>Ular <strong>wildcard (har qanday belgi), matnni boshi yoki oxiri</strong>, va boshqa murakkab <strong>qoidalar</strong> bo‘yicha ishlaydi.</p>
+    
+    <table>
+        <tr>
+            <th>Belgilar</th>
+            <th>Ma'nosi</th>
+        </tr>
+        <tr>
+            <td>^</td>
+            <td>Matn boshiga mos keladi</td>
+        </tr>
+        <tr>
+            <td>$</td>
+            <td>Matn oxiriga mos keladi</td>
+        </tr>
+        <tr>
+            <td>.</td>
+            <td>Har qanday bitta belgi</td>
+        </tr>
+        <tr>
+            <td>*</td>
+            <td>Oldingi belgining cheksiz takrorlanishi</td>
+        </tr>
+        <tr>
+            <td>+</td>
+            <td>Oldingi belgining kamida 1 marta bo‘lishi</td>
+        </tr>
+        <tr>
+            <td>[abc]</td>
+            <td>a, b yoki c belgisiga mos keladi</td>
+        </tr>
+        <tr>
+            <td>[0-9]</td>
+            <td>Istalgan raqamga mos keladi</td>
+        </tr>
+        <tr>
+            <td>[^xyz]</td>
+            <td>x, y, z dan tashqari istalgan belgi</td>
+        </tr>
+    </table>
+    
+    <h2>3. Regex'ning PostgreSQLdagi ishlatilishi</h2>
+    <p>PostgreSQL-da <strong>WHERE sharti</strong> bilan ishlatiladi.</p>
+    <p><strong>`~` (Tilda)</strong> – oddiy moslik operatori.</p>
+    <p><strong>`!~`</strong> – mos kelmaydigan matnlarni topish uchun.</p>
+    <p><strong>`~*` va `!~*`</strong> – <strong>katta-kichik harflarni</strong> hisobga oladigan yoki olmaydigan mosliklar.</p>
+    
+    <h3>Misollar:</h3>
+    <p><strong>1. Matn ichida "UMSI" so‘zini qidirish:</strong></p>
+    <pre><code>SELECT * FROM table_name WHERE column_name ~ 'UMSI';</code></pre>
+    
+    <p><strong>2. Matn boshida "C" harfi borligini tekshirish:</strong></p>
+    <pre><code>SELECT * FROM table_name WHERE column_name ~ '^C';</code></pre>
+    
+    <p><strong>3. Matn oxiri ".edu" bilan tugashini tekshirish:</strong></p>
+    <pre><code>SELECT * FROM table_name WHERE column_name ~ 'edu$';</code></pre>
+    
+    <p><strong>4. Sonlarni o‘z ichiga olgan matnlarni topish:</strong></p>
+    <pre><code>SELECT * FROM table_name WHERE column_name ~ '[0-9]';</code></pre>
+    
+    <h2>4. Regexdan foydalanishning afzalliklari</h2>
+    <ul>
+        <li><strong>Matn bilan murakkab operatsiyalarni</strong> bajarish mumkin.</li>
+        <li><strong>Katta hajmdagi ma’lumotlarni</strong> filtrlashni osonlashtiradi.</li>
+        <li><strong>Turli dasturiy tillar va SQL tizimlarida</strong> qo‘llab-quvvatlanadi.</li>
+    </ul>
+    
+    <p>Bu ma’lumotlar <strong>PostgreSQL</strong> va boshqa tizimlarda <strong>Regex</strong>ni qanday qo‘llashni tushunishga yordam beradi.</p>
+    <p>Agar sizga konkret misollar yoki amaliy qo‘llanma kerak bo‘lsa, aytib o‘ting! 🚀</p>
+</body>
+</html>
