@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inverted Indexes in PostgreSQL</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 20px; }
+        h1, h2, h3 { color: #2c3e50; }
+        code { background: #f4f4f4; padding: 2px 5px; border-radius: 5px; }
+        pre { background: #f4f4f4; padding: 10px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Inverted Indexes in PostgreSQL</h1>
+    <hr>
+    
+    <h2>Tushuncha va Izoh</h2>
+    <p>PostgreSQL'da <strong>inverted index</strong> asosan matn qidiruvi (full-text search) uchun ishlatiladi. Bu indekslar katta hajmli ma’lumotlarda tezkor qidiruv va tekshirishni ta’minlaydi.</p>
+    <hr>
+    <h2>Inverted Index turlari</h2>
+    <h3>1. GIN (Generalized Inverted Index)</h3>
+    <ul>
+        <li><strong>Afzalliklari:</strong> aniq mosliklar, qidiruv va indeks bo‘yicha samaradorlik.</li>
+        <li><strong>Kamchiliklari:</strong> yangi ma’lumot qo‘shish va yangilash sekin ishlaydi, chunki har bir so‘z indeksga alohida kiritiladi.</li>
+    </ul>
+    
+    <h3>2. GiST (Generalized Search Tree)</h3>
+    <ul>
+        <li>GiST indekslari ba’zi maxsus holatlar uchun qo‘llaniladi.</li>
+        <li>U <strong>hashing</strong> yordamida hajmni kamaytiradi, lekin <strong>loose indexing</strong> sababli noto‘g‘ri mosliklar bo‘lishi mumkin.</li>
+        <li>PostgreSQL bunday noto‘g‘ri mosliklarni filtrlaydi.</li>
+    </ul>
+    <hr>
+    <h2>Misol orqali tushuntirish</h2>
+    <p><strong>docs</strong> jadvali yaratiladi, unda <strong>id</strong> (PRIMARY KEY) va <strong>doc</strong> (matn maydoni) mavjud:</p>
+    <pre><code>CREATE TABLE docs (id SERIAL, doc TEXT, PRIMARY KEY(id));</code></pre>
+    
+    <p><strong>GIN indeksi</strong> quyidagi tarzda yaratiladi:</p>
+    <pre><code>CREATE INDEX gin1 ON docs USING gin(string_to_array(doc, ' ') _text_ops);</code></pre>
+    
+    <p><strong>Ma’lumot kiritish:</strong></p>
+    <pre><code>INSERT INTO docs (doc) VALUES
+('This is SQL and Python and other fun teaching stuff'),
+('More people should learn SQL from UMSI'),
+('UMSI also teaches Python and also SQL');</code></pre>
+    
+    <p><strong>Qidiruv operatori "&lt;@"</strong> — qidirilayotgan element massiv ichida bor-yo‘qligini tekshiradi:</p>
+    <pre><code>SELECT id, doc FROM docs WHERE '{learn}' <@ string_to_array(doc, ' ');</code></pre>
+    
+    <p>Bu SQL so‘rovi <code>"learn"</code> so‘zi mavjud bo‘lgan qatorlarni qaytaradi.</p>
+    <hr>
+    <h2>Xulosa</h2>
+    <ul>
+        <li><strong>GIN</strong> indekslari <strong>tez qidiruv</strong> uchun samarali, lekin <strong>yangilash qimmatga tushadi</strong>.</li>
+        <li><strong>GiST</strong> indekslari <strong>kamroq joy egallaydi</strong>, lekin <strong>ba’zi noto‘g‘ri mosliklarni filtrlash</strong> talab etiladi.</li>
+        <li><strong>"&lt;@" operatori</strong> array ichida element mavjudligini tekshirishda ishlatiladi.</li>
+    </ul>
+    
+    <p>Agar bu mavzu bo‘yicha qo‘shimcha savollaringiz bo‘lsa, bemalol so‘rashingiz mumkin! 🚀</p>
+</body>
+</html>

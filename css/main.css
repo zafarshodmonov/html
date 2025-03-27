@@ -1,0 +1,36 @@
+code {
+    font-family: monospace;
+    font-size: 18px;
+
+    color: #333;
+
+    background-color: #d0eee3;
+
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    
+
+    border: 8px solid #3256ce;
+    border-radius: 4px;
+
+    padding-left: 2px;
+    padding-right: 2px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+
+    white-space: pre;
+    word-wrap: break-word;
+}
+
+pre {
+    font-family: monospace;
+    color: #333;
+    background-color: #f8f8f8;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 6px 10px;
+    white-space: pre;
+    word-wrap: break-word;
+}

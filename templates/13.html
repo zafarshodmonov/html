@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script type="text/javascript" async
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+    
+</head>
+<body>
+    <h1>Perspective Transformation</h1>
+    <hr>
+    <h2>Definition:</h2>
+    <p>Perspective transformation is a geometric transformation that maps a quadrilateral in one plane to another quadrilateral in a different plane using a projective transformation matrix. It is commonly used in computer vision and image processing for tasks like document scanning, image rectification, and camera calibration.
+    </p>
+    <hr>
+    <h2>Formula:</h2>
+    <p>The transformation is represented using a 3×3 homography matrix H, which transforms a point (x,y) in one image to a new point (x′,y′) in another image:</p>
+    
+    <p>
+        \[
+        \begin{bmatrix} x' \\ y' \\ w' \end{bmatrix} =
+        H \cdot
+        \begin{bmatrix} x \\ y \\ 1 \end{bmatrix}
+        \]
+    </p>
+    <p>After transformation, the new coordinates are obtained as:</p>
+    <p>
+        \[
+        x' = \frac{h_{11}x + h_{12}y + h_{13}}{h_{31}x + h_{32}y + h_{33}}, \quad
+        y' = \frac{h_{21}x + h_{22}y + h_{23}}{h_{31}x + h_{32}y + h_{33}}
+        \]
+    </p>
+    <p>where H is:</p>
+    <p>
+        \[
+        H =
+        \begin{bmatrix}
+        h_{11} & h_{12} & h_{13} \\
+        h_{21} & h_{22} & h_{23} \\
+        h_{31} & h_{32} & h_{33}
+        \end{bmatrix}
+        \]
+    </p>
+    <hr>
+
+    <h2>Applications:</h2>
+    <ul>
+        <li>Document scanning (correcting skewed images)</li>
+        <li>Image perspective correction (rectifying distorted images)</li>
+        <li>Augmented reality (overlaying objects with correct perspective)</li>
+        <li>Camera calibration (understanding lens distortion and projection)</li>
+    </ul>
+    <hr>
+    <h2>Perspective Transformation in OpenCV</h2>
+    <p>To apply Perspective Transformation in OpenCV, follow these steps:</p>
+    <ul>
+        <li>1. Select four points in the input image that form a quadrilateral.</li>
+        <li>2. Define four corresponding points in the output image where you want to map the quadrilateral.</li>
+        <li>3. Compute the perspective transform matrix using cv2.getPerspectiveTransform()</li>
+        <li>4. Apply the transformation using cv2.warpPerspective()</li>
+    </ul>
+    <img src="/images/perspective-transformation.png" alt="perspective-transformation" style="display: block; margin: auto;">
+    <hr>
+    <h3>1. Select four points in the input image that form a quadrilateral.</h3>
+    <code>
+        <pre>
+import cv2
+import numpy as np
+
+# Load the image
+image = cv2.imread("/mnt/data/image.png")
+
+# Define source points (before transformation)
+pts1 = np.float32([[50, 0], [150, 0], [0, 200], [200, 200]])
+        </pre>
+    </code>
+    <hr>
+    <h3>2. Define four corresponding points in the output image where you want to map the quadrilateral.
+    </h3>
+    <code>
+        <pre># Define destination points (after transformation)
+pts2 = np.float32([[0, 0], [200, 0], [0, 200], [200, 200]])
+
+        </pre>
+    </code>
+    <hr>
+    <h3>Compute the perspective transform matrix using cv2.getPerspectiveTransform()
+    </h3>
+    <code>
+        <pre>
+# Compute the transformation matrix
+matrix = cv2.getPerspectiveTransform(pts1, pts2)
+        </pre>
+    </code>
+    <hr>
+    <h3>Apply the transformation using cv2.warpPerspective()
+    </h3>
+    <code>
+        <pre>
+# Apply the perspective warp
+warped_image = cv2.warpPerspective(image, matrix, (200, 200))
+
+# Save the result
+output_path = "/mnt/data/warped_image.png"
+cv2.imwrite(output_path, warped_image)
+
+
+        </pre>
+    </code>
+    <hr>
+</body>
+</html>

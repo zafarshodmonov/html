@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PostgreSQL va Natural Language Processing (NLP)</title>
+</head>
+<body>
+    <h1>PostgreSQL va Natural Language Processing (NLP)</h1>
+    <h2>1. Oddiy Invers Indeks va Muammo</h2>
+    <p>
+        Hozirgacha biz <strong>oddiy invers indeks</strong> bilan ishladik, ya’ni so‘zlar shunchaki saqlanib, ularni qidirish mumkin edi.
+        <br>
+        <strong>Muammo:</strong> Agar biz tabiiy til bilan ishlayotgan bo‘lsak, ba’zi so‘zlarni indeksga qo‘shish <strong>keraksiz joy egallaydi</strong> va qidiruv natijalarini <strong>noaniq</strong> qiladi.
+    </p>
+    <h3>Misol:</h3>
+    <ul>
+        <li>Google'da hech kim "the", "and", "but" kabi so‘zlarni qidiravermaydi.</li>
+        <li>Bular grammatik jihatdan muhim, lekin <strong>qidiruv natijalari uchun ahamiyatsiz</strong>.</li>
+        <li>Bu so‘zlarni indeksdan olib tashlash <strong>indeks hajmini kamaytiradi</strong> va <strong>qidiruv natijalarini yaxshilaydi</strong>.</li>
+    </ul>
+    
+    <h2>2. NLP Optimallashtirish Strategiyalari</h2>
+    <h3>1️⃣ Stop Words – Keraksiz so‘zlarni olib tashlash</h3>
+    <p>"the", "and", "but", "if" kabi so‘zlar <strong>stop words</strong> deyiladi. PostgreSQL ularni indeksga qo‘shmaslik imkoniyatini beradi.</p>
+    
+    <h3>2️⃣ Lowercasing – Hammasini kichik harflarga o‘tkazish</h3>
+    <p>"SQL" va "sql", "Teacher" va "teacher" bir xil ma’noga ega, shuning uchun barchasini kichik harflarga o‘tkazish kerak.</p>
+    
+    <h3>3️⃣ Stemming – So‘zlarning ildizini saqlash</h3>
+    <p>"car" va "cars" yoki "auto" va "automobile" bir xil ma’noga ega bo‘lgani sababli, ildiz shaklida indekslash muhim.</p>
+    
+    <h2>3. PostgreSQL'da NLP va Matn Qidiruvi</h2>
+    <p>
+        ✅ PostgreSQL <code>pg_ts_config</code> jadvalida turli tillar uchun maxsus <strong>stemming va stop words</strong> to‘plamlarini saqlaydi.
+        <br>
+        ✅ <code>SELECT cfgname FROM pg_ts_config;</code> buyrug‘i yordamida PostgreSQL qo‘llab-quvvatlaydigan tillarni ko‘rish mumkin.
+    </p>
+    
+    <h2>4. Invers Indeksni Yaxshilash</h2>
+    <p>
+        ✅ Avval indeks <strong>qo‘lda</strong> SQL yordamida yaratiladi.
+        <br>
+        ✅ Keyin PostgreSQL yordamida <strong>avtomatlashtirilgan invers indeks</strong> hosil qilinadi.
+        <br>
+        ✅ Indeksda faqat <strong>ma’noli so‘zlar qoldiriladi</strong>, kichik harflarga o‘tkaziladi va so‘z ildizlari ishlatiladi.
+    </p>
+    
+    <h2>Xulosa</h2>
+    <ul>
+        <li>🚀 PostgreSQL tabiiy til asosida invers indeksni optimallashtirish imkoniyatlarini beradi.</li>
+        <li>🚀 Stop words olib tashlanadi, harflar kichiklashtiriladi va so‘zlarning ildizi indekslanadi.</li>
+        <li>🚀 Bu usullar qidiruv natijalarini tezlashtiradi va aniqroq qiladi!</li>
+    </ul>
+</body>
+</html>

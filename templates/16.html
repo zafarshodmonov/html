@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PostgreSQL va Inverted Index</title>
+</head>
+<body>
+    <h1>PostgreSQL'da Inverted Index (Teskariga Indekslash)</h1>
+    
+    <h2>1. Matnni so‘zlarga ajratish</h2>
+    <p>PostgreSQLning <code>string_to_array()</code> va <code>unnest()</code> funksiyalari yordamida matnni alohida so‘zlarga ajratish mumkin.</p>
+    
+    <h3>Misol:</h3>
+    <pre><code>SELECT unnest(string_to_array('Hello world', ' '));</code></pre>
+    <p>Bu so‘rov natijasida quyidagi natija hosil bo‘ladi:</p>
+    <pre>
+Hello
+world
+    </pre>
+    
+    <h2>2. Inverted Index qanday ishlaydi?</h2>
+    <p>Inverted Index qidiruv tizimlarini optimallashtirish uchun qo‘llaniladi. U quyidagi struktura asosida ishlaydi:</p>
+    <table border="1">
+        <tr>
+            <th>Keyword</th>
+            <th>Doc ID</th>
+        </tr>
+        <tr>
+            <td>Python</td>
+            <td>1</td>
+        </tr>
+        <tr>
+            <td>SQL</td>
+            <td>1</td>
+        </tr>
+        <tr>
+            <td>This</td>
+            <td>1</td>
+        </tr>
+        <tr>
+            <td>and</td>
+            <td>1</td>
+        </tr>
+        <tr>
+            <td>fun</td>
+            <td>1</td>
+        </tr>
+    </table>
+    
+    <h2>3. PostgreSQL'da hujjatlarni saqlash</h2>
+    <pre><code>CREATE TABLE docs (id SERIAL, doc TEXT, PRIMARY KEY(id));</code></pre>
+    <p>Bu kod har bir matn qatori uchun avtomatik ID yaratadi.</p>
+    
+    <h2>4. Indeksni yaratish va qidiruv jarayoni</h2>
+    <pre><code>SELECT id, unnest(string_to_array(doc, ' ')) AS keyword FROM docs;</code></pre>
+    
+    <h2>5. Xulosa</h2>
+    <ul>
+        <li>PostgreSQL'da <code>string_to_array()</code> va <code>unnest()</code> funksiyalari orqali matn so‘zlarga ajratiladi.</li>
+        <li>Inverted index katta hajmli matnlar bilan ishlashda qidiruvni tezlashtiradi.</li>
+        <li>Indeksda faqat ahamiyatli so‘zlar saqlanadi, shuning uchun qidiruv samaradorligi oshadi.</li>
+    </ul>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Indexes: GIN, B-Tree, BRIN, Hash</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 20px; }
+        h1, h2 { color: #2c3e50; }
+        code { background: #ecf0f1; padding: 2px 5px; border-radius: 3px; }
+        pre { background: #f4f4f4; padding: 10px; border-radius: 5px; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background: #34495e; color: white; }
+    </style>
+</head>
+<body>
+    <h1>Database Indexes: GIN, B-Tree, BRIN, Hash</h1>
+
+    <h2>1. B-Tree (Balanced Tree)</h2>
+    <p>B-Tree indeksi <b>PostgreSQL'dagi standart indeks</b> bo‘lib, barcha umumiy maqsadli qidiruvlar uchun ishlatiladi.</p>
+    <h3>Misol:</h3>
+    <pre><code>CREATE INDEX idx_users_name ON users (name);</code></pre>
+    <h3>Afzalliklari:</h3>
+    <ul>
+        <li>Oddiy qidiruvlar (<code>=</code>, <code>&gt;</code>, <code>&lt;</code>) uchun mos.</li>
+        <li>Juda samarali va tez ishlaydi.</li>
+    </ul>
+
+    <h2>2. BRIN (Block Range INdex)</h2>
+    <p>BRIN indeks <b>juda katta jadvallar</b> uchun foydalidir va katta hajmdagi <b>tartiblangan ma’lumotlarni</b> samarali qidirishga imkon beradi.</p>
+    <h3>Misol:</h3>
+    <pre><code>CREATE INDEX idx_orders_date ON orders USING BRIN (order_date);</code></pre>
+    <h3>Afzalliklari:</h3>
+    <ul>
+        <li>Katta hajmdagi jadvallar uchun samarali.</li>
+        <li>Diskda kam joy egallaydi.</li>
+    </ul>
+
+    <h2>3. Hash Index</h2>
+    <p>Hash indeks faqat <b>aniq mos keluvchi qidiruvlar</b> (<code>=</code>) uchun mo‘ljallangan.</p>
+    <h3>Misol:</h3>
+    <pre><code>CREATE INDEX idx_users_email ON users USING HASH (email);</code></pre>
+    <h3>Afzalliklari:</h3>
+    <ul>
+        <li>Aniq mos keluvchi qidiruvlar uchun eng tezkor indeks.</li>
+        <li>Biroq, <code>&gt;</code> yoki <code>&lt;</code> operatorlari bilan ishlamaydi.</li>
+    </ul>
+
+    <h2>4. GIN (Generalized Inverted Index)</h2>
+    <p>GIN indeks matnli qidiruvlar, JSON, array ustunlari uchun ishlatiladi.</p>
+    <h3>Misol:</h3>
+    <pre><code>CREATE INDEX idx_documents_tags ON documents USING GIN (tags);</code></pre>
+    <h3>Afzalliklari:</h3>
+    <ul>
+        <li>Array, JSONB va to‘liq matnli qidiruv uchun mukammal.</li>
+        <li>Tez qidiruv, lekin indeks yaratish uzoqroq davom etadi.</li>
+    </ul>
+
+    <h2>Taqqoslash</h2>
+    <table>
+        <tr>
+            <th>Indeks turi</th>
+            <th>Foydalanish holatlari</th>
+            <th>Afzalliklari</th>
+            <th>Kamchiliklari</th>
+        </tr>
+        <tr>
+            <td><b>B-Tree</b></td>
+            <td>Standart qidiruvlar (<code>=</code>, <code>&gt;</code>, <code>&lt;</code>)</td>
+            <td>Eng tezkor umumiy indeks</td>
+            <td>Katta hajmda ba’zan sust</td>
+        </tr>
+        <tr>
+            <td><b>BRIN</b></td>
+            <td>Katta hajmli, tartiblangan jadvallar</td>
+            <td>Diskda kam joy egallaydi</td>
+            <td>Har doim ham optimal emas</td>
+        </tr>
+        <tr>
+            <td><b>Hash</b></td>
+            <td>Aniq mos keluvchi qidiruv (<code>=</code>)</td>
+            <td>Eng tezkor qidiruv</td>
+            <td>Boshqa operatorlar bilan ishlamaydi</td>
+        </tr>
+        <tr>
+            <td><b>GIN</b></td>
+            <td>Array, JSON, Matn qidiruvi</td>
+            <td>Ko‘p qiymatli ustunlar uchun mukammal</td>
+            <td>Indeks yaratish uzoq vaqt olishi mumkin</td>
+        </tr>
+    </table>
+
+    <h2>Xulosa</h2>
+    <ul>
+        <li>Agar umumiy qidiruv bo‘lsa → <b>B-Tree</b> eng yaxshi tanlov.</li>
+        <li>Agar katta hajmda ishlasangiz → <b>BRIN</b>.</li>
+        <li>Agar faqat aniq moslik kerak bo‘lsa → <b>Hash</b>.</li>
+        <li>Agar JSON, array yoki matn bilan ishlasangiz → <b>GIN</b>.</li>
+    </ul>
+</body>
+</html>
